@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "754472506810",
+    "project_id": "ownnotes",
+    "storage_bucket": "ownnotes.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:754472506810:android:acd0815777631afbae3983",
+        "android_client_info": {
+          "package_name": "com.stephenprojects.ownnotes"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBt9BH8b0Po73AkIbFaIkGUpo8ABA-56XY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
