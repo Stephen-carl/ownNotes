@@ -43,21 +43,23 @@ class Homepage extends StatelessWidget {
           switch (snapshot.connectionState) {
             case ConnectionState.done:
             //get the current user
-          //  final user = FirebaseAuth.instance.currentUser;
-          //  print(user);
-          //  //to know if user is verified
-          //  //so if the user verification can be read as true or false bcus it cannot be null
-          //  if (user?.emailVerified??false) {
-          //   //so if the initialization is done, it will just say done for now
-          //   return const Text('Done');
-          //  } else {
-          //   print('Please verify');
-          //   //to display the verify email view just like a pop-up on hte main screen
-          //   return const VerifyEmailView();
-          //  }
+           final user = FirebaseAuth.instance.currentUser;
+           //now what i want to do is to check if the current user is verified
+           //else let them verify
+           if (user != null) {
+            //and if the user is verified
+            if (user.emailVerified) {
+              print('Email is verified');
+            } //if not verified
+            else {
+              return const VerifyEmailView();
+            } //else if there is no user loggedn
+           } else {
+            return const LoginView();
+           }
 
-          //trial 
-          return const LoginView();
+           //if it is done
+           return const Text('Done');
            //default signifies anything else that has not been handled
         default:
         //this is to make things look better display a circular 
