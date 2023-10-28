@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'dart:developer' as devtools show log; 
 
 //Login View
 class LoginView extends StatefulWidget {
@@ -68,21 +69,22 @@ class _LoginViewState extends State<LoginView> {
                     //instantiate the firebase auth to get the function to create a user
                   //create instants of firebaseAuth
                   //using await makes the process start
-                  final userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(
+                  await FirebaseAuth.instance.signInWithEmailAndPassword(
                     email: email, 
                     password: password
                     );
                     Navigator.of(context).pushNamedAndRemoveUntil(
                       '/notes/', 
-                      (route) => false);
+                      (_) => false,
+                    );
                   } 
                   //to read the exact error and work on it
                   //it has a email and password exception
                   on FirebaseAuthException catch (e) {
                     if (e.code == 'invalid-login-credentials') {
-                      print('invalid-login-credentials');
+                      devtools.log('invalid-login-credentials');
                     } else {
-                      print(e.code);
+                      devtools.log(e.code);
                     }
                   }                 
                 }, 

@@ -4,8 +4,7 @@ import 'views/register_view.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:ownnotes/firebase_options.dart';
-import 'package:ownnotes/views/verifyEmailView.dart';
-import 'dart:developer' as devtools show log;
+import 'package:ownnotes/views/verify_email_view.dart';
 void main() {
   //this is to bind firebase with the application before any major is done
   WidgetsFlutterBinding.ensureInitialized();
@@ -61,7 +60,6 @@ class Homepage extends StatelessWidget {
             return const LoginView();
            }
 
-           
            //default signifies anything else that has not been handled
         default:
         //this is to make things look better display a circular 
