@@ -74,8 +74,8 @@ class _RegisterViewState extends State<RegisterView> {
                     password: password
                     );
                     print('Registered Suceessfully');
-                  } on FirebaseAuthException catch (e) {
-                    print(e.code);
+                  } on FirebaseAuthException catch (e) {  
+                    print(e.code);  //to set authenticity
                     if (e.code == 'weak-password') {
                       print('Minimum of 6 characters');
                     } else if (e.code == 'email-already-in-use') {
@@ -88,14 +88,15 @@ class _RegisterViewState extends State<RegisterView> {
                 child: const Text(
                   'Register',
                   )
-                ),
-                TextButton(
+              ),
+              TextButton(
                   onPressed: () {
                     Navigator.of(context).pushNamedAndRemoveUntil(
                       '/login/', 
                       (route) => false);
                 }, 
-                child: const Text('Already Registered? Sign In'))
+                child: const Text('Already Registered? Sign In')
+              ),
             ],
           ),
     );

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+
 //Login View
 class LoginView extends StatefulWidget {
   const LoginView({super.key});
@@ -71,8 +72,9 @@ class _LoginViewState extends State<LoginView> {
                     email: email, 
                     password: password
                     );
-                    print('Login successful');
-                    print(userCredential);
+                    Navigator.of(context).pushNamedAndRemoveUntil(
+                      '/notes/', 
+                      (route) => false);
                   } 
                   //to read the exact error and work on it
                   //it has a email and password exception
