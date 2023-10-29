@@ -5,6 +5,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:ownnotes/firebase_options.dart';
 import 'package:ownnotes/views/verify_email_view.dart';
+import 'constants/routes.dart';
+
 void main() {
   //this is to bind firebase with the application before any major is done
   WidgetsFlutterBinding.ensureInitialized();
@@ -18,10 +20,10 @@ void main() {
       ),
       home: const Homepage(),
       routes: {
-        '/login/': (context) => const  LoginView(),
-        '/register/': (context) => const RegisterView(),
-        '/verify-Email/':(context) => const VerifyEmailView(),
-        'notes':(context) => const Notesview(),
+        loginRoute: (context) => const  LoginView(),
+        registerRoute: (context) => const RegisterView(),
+        verifyRoute:(context) => const VerifyEmailView(),
+        notesRoute:(context) => const Notesview(),
       },
     ),
   );
@@ -99,7 +101,7 @@ class _NoteviewState extends State<Notesview> {
                 if (shouldlogout) {
                 await FirebaseAuth.instance.signOut();
                 Navigator.of(context).pushNamedAndRemoveUntil(
-                '/login/', 
+                loginRoute, 
                 (_) => false);
             }
             }

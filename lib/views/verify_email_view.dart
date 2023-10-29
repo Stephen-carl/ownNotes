@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:ownnotes/constants/routes.dart';
+import 'dart:developer' as devtools show log;
 
 //creating a different class for verfying the mail
 //so this will just be a popup on top of the homepage
@@ -27,6 +29,14 @@ class _VerifyEmailViewState extends State<VerifyEmailView> {
                 final theUser = FirebaseAuth.instance.currentUser;
                 //2. send email verfication, mind you the user can be null so use the '?'
                 await theUser?.sendEmailVerification();
+                if (theUser?.emailVerified??false) {
+                  Navigator.of(context).pushNamedAndRemoveUntil(
+                    loginRoute, 
+                    (_) => false,
+                  );
+                } else {
+                  devtools.log('please verify your email');
+                }
               }, 
               child: Text('Send email verification'),
               ),
