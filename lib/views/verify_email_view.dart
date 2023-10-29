@@ -22,7 +22,8 @@ class _VerifyEmailViewState extends State<VerifyEmailView> {
       ),
       body: Column(
           children: [
-            Text('Please Verify your email address'),
+            const Text('We have sent you an email verification. Please open it to verify your account'),
+            const Text('If you have not received a verification mail yet, click this button below'),
             TextButton(
               onPressed: () async {
                 //1. get the current user
@@ -35,10 +36,21 @@ class _VerifyEmailViewState extends State<VerifyEmailView> {
                     (_) => false,
                   );
                 } else {
-                  devtools.log('please verify your email');
+                  devtools.log('Please verify your email');
                 }
               }, 
-              child: Text('Send email verification'),
+              child: const Text('Send email verification'),
+              ),
+              TextButton(
+                onPressed: () async{
+                  //log the user out
+                  await FirebaseAuth.instance.signOut();
+                  Navigator.of(context).pushNamedAndRemoveUntil(
+                    registerRoute, 
+                    (route) => false,
+                  );
+                }, 
+                child: const Text('Restart'),
               ),
           ],
         ),

@@ -50,15 +50,16 @@ class Homepage extends StatelessWidget {
            //now what i want to do is to check if the current user is verified
            //else let them verify
            if (user != null) {
-            return const Notesview();
-            //and if the user is verified
-          //   if (user.emailVerified) {
-          //     print('Email is verified');
-          //   } //if not verified
-          //   else {
-          //     return const VerifyEmailView();
+            if (user.emailVerified) {
+              return const Notesview();
+            }
           //   } //else if there is no user loggedn
-            } else {
+          else {
+              //why it is verify is bcus the user must have registered but not verified
+            return const VerifyEmailView();
+            } 
+           } else {
+            //if the user is null, go to login
             return const LoginView();
            }
 
@@ -97,6 +98,7 @@ class _NoteviewState extends State<Notesview> {
               switch (value) {
                 case MenuAction.logout:
                   //so here , it should didplay the dialog function  which has been defined
+                  //so we passed in the context of the notesview
                 final shouldlogout = await showLogOutDialog(context);
                 if (shouldlogout) {
                 await FirebaseAuth.instance.signOut();
@@ -128,14 +130,14 @@ class _NoteviewState extends State<Notesview> {
 }
 
 //this function is primarily to show the alert dialog
-//create a logout function called showLogOutDialog which must be built in a context
+//create a logout function called showLogOutDialog which must be built in a context where it will be displayed
 Future<bool> showLogOutDialog (BuildContext context) {
   return showDialog<bool>(
     context: context, 
     builder: (context) {
       //return the alert dialog that will be displayed
       return AlertDialog(
-        title: Text('Logout'),
+        title: const Text('Logout'),
         content: Text('Do you really want to logout?'),
         actions: [
           //here we introuce the two buttons that are to be displayed

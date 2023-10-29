@@ -1,8 +1,10 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'dart:developer' as devtools show log;
 
-import 'package:ownnotes/constants/routes.dart'; 
+import 'package:ownnotes/constants/routes.dart';
+import 'package:ownnotes/utilities/show_error_dialog.dart'; 
 
 //Registeration App
 class RegisterView extends StatefulWidget {
@@ -76,18 +78,52 @@ class _RegisterViewState extends State<RegisterView> {
                     email: email, 
                     password: password
                     );
-                    //use this instead of print statement
-                    devtools.log('Registered Suceessfully');
+                    //here instead of makinig the user click the button in the verifyemail
+                    //we will send the mail from here, by first getting the currentuser
+                    final currentUser = FirebaseAuth.instance.currentUser;
+                    await currentUser?.sendEmailVerification();
+                    //take user to verify his or her mail
+                    //but in this case, our verification is not functioning for now, so we will push the user to the notesview
+                    //if we are to navigate to verify email, we need to use pushNamed() function only
+                    Navigator.of(context).pushNamed(verifyRoute);
                   } on FirebaseAuthException catch (e) {  
-                    devtools.log(e.code);  //to set authenticity
                     if (e.code == 'weak-password') {
-                      devtools.log('Minimum of 6 characters');
+                      //call the error dialog function
+                      await showErrorDialog(
+                        //context is gotten from the builContent of the view
+                        context, 
+                        'Minimum of 6 characters',
+                      );
                     } else if (e.code == 'email-already-in-use') {
-                      devtools.log('Email is already in use');
+                      await showErrorDialog(
+                        //context is gotten from the builContent of the view
+                        context, 
+                        'Email is already in use',
+                      );                      
                     } else if (e.code == 'invalid-email') {
-                      devtools.log('Invalid email entered');
+                      await showErrorDialog(
+                        //context is gotten from the builContent of the view
+                        context, 
+                        'Invalid email entered',
+                      ); 
+                    } else {
+                      await showErrorDialog(
+                        //context is gotten from the builContent of the view
+                        context, 
+                        'Error: ${e.code}',
+                      );
                     }
-                  }                
+                  }   
+                  //for other exceptions
+                  //we can attach other catch statement
+                  catch (e){
+                    await showErrorDialog(
+                        //context is gotten from the builContent of the view
+                        context, 
+                        e.toString(),
+                      );
+                  }
+                              
                 }, 
                 child: const Text(
                   'Register',
@@ -106,3 +142,5 @@ class _RegisterViewState extends State<RegisterView> {
     );
   }
 }
+
+

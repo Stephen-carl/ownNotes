@@ -1,8 +1,11 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'dart:developer' as devtools show log;
+//import 'dart:developer' as devtools show log;
 
-import 'package:ownnotes/constants/routes.dart'; 
+import 'package:ownnotes/constants/routes.dart';
+import 'package:ownnotes/utilities/show_error_dialog.dart'; 
 
 //Login View
 class LoginView extends StatefulWidget {
@@ -75,6 +78,7 @@ class _LoginViewState extends State<LoginView> {
                     email: email, 
                     password: password
                     );
+                    //once confirmed, take the user to the notesView
                     Navigator.of(context).pushNamedAndRemoveUntil(
                       notesRoute, 
                       (_) => false,
@@ -84,11 +88,35 @@ class _LoginViewState extends State<LoginView> {
                   //it has a email and password exception
                   on FirebaseAuthException catch (e) {
                     if (e.code == 'invalid-login-credentials') {
-                      devtools.log('invalid-login-credentials');
+                      //call the error dialog function
+                      await showErrorDialog(
+                        //context is gotten from the builContent of the view
+                        context, 
+                        'invalid-login-credentials',
+                      );
+                    } else if(e.code == 'invalid-email'){
+                      await showErrorDialog(
+                        //context is gotten from the builContent of the view
+                        context, 
+                        'invalid-email',
+                      );
                     } else {
-                      devtools.log(e.code);
+                      //so incase there are other errors i did not notice
+                      await showErrorDialog(
+                        //context is gotten from the builContent of the view
+                        context, 
+                        'Error: ${e.code}',
+                      );
                     }
-                  }                 
+                  }
+                  //to handle other excpetion
+                  catch(e) {
+                    await showErrorDialog(
+                        //context is gotten from the builContent of the view
+                        context, 
+                        e.toString(),
+                      );
+                  }              
                 }, 
                 child: const Text(
                   'Login',
