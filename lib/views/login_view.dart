@@ -78,11 +78,23 @@ class _LoginViewState extends State<LoginView> {
                     email: email, 
                     password: password
                     );
-                    //once confirmed, take the user to the notesView
-                    Navigator.of(context).pushNamedAndRemoveUntil(
+                    final useer = FirebaseAuth.instance.currentUser;
+                    //if user email verification is false
+                    if (useer?.emailVerified??false) {
+                      //users email is verified, push to NotesView
+                      //once confirmed, take the user to the notesView
+                      Navigator.of(context).pushNamedAndRemoveUntil(
                       notesRoute, 
-                      (_) => false,
+                      (route) => false,
                     );
+                    } else {
+                      //user's email is not verified, push to verify mail
+                      Navigator.of(context).pushNamedAndRemoveUntil(
+                      verifyRoute, 
+                      (route) => false,
+                    );
+                    }
+                                      
                   } 
                   //to read the exact error and work on it
                   //it has a email and password exception
@@ -129,14 +141,6 @@ class _LoginViewState extends State<LoginView> {
                   (route) => false);
               }, 
               child: const Text ('Register here'),
-              ),
-              TextButton(onPressed: () {
-                //to go to the register page
-                Navigator.of(context).pushNamedAndRemoveUntil(
-                  verifyRoute, 
-                  (route) => false);
-              }, 
-              child: const Text ('Verify Email'),
               ),
             ],
           ),

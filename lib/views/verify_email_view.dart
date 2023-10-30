@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:ownnotes/constants/routes.dart';
@@ -41,6 +43,7 @@ class _VerifyEmailViewState extends State<VerifyEmailView> {
               }, 
               child: const Text('Send email verification'),
               ),
+              //just incase the user makes a mistake
               TextButton(
                 onPressed: () async{
                   //log the user out

@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:ownnotes/views/login_view.dart';
 import 'views/register_view.dart';
