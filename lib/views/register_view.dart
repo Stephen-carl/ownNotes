@@ -1,9 +1,9 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-
 import 'package:ownnotes/constants/routes.dart';
+import 'package:ownnotes/service/auth/auth_exceptions.dart';
+import 'package:ownnotes/service/auth/auth_service.dart';
 import 'package:ownnotes/utilities/show_error_dialog.dart'; 
 
 //Registeration App
@@ -74,55 +74,82 @@ class _RegisterViewState extends State<RegisterView> {
                     //instantiate the firebase auth to get the function to create a user
                   //create instants of firebaseAuth
                   //using await makes the process start
-                  await FirebaseAuth.instance.createUserWithEmailAndPassword(
+                  await AuthService.firebase().createUser(
                     email: email, 
                     password: password
                     );
                     //here instead of makinig the user click the button in the verifyemail
-                    //we will send the mail from here, by first getting the currentuser
-                    final currentUser = FirebaseAuth.instance.currentUser;
-                    await currentUser?.sendEmailVerification();
+                    //we will send the mail from here, so since it is already noted in the authservice, no need to get user first
+                   AuthService.firebase().sendEmailVerification();
                     //take user to verify his or her mail
-                    //but in this case, our verification is not functioning for now, so we will push the user to the notesview
                     //if we are to navigate to verify email, we need to use pushNamed() function only
                     Navigator.of(context).pushNamed(verifyRoute);
-                  } on FirebaseAuthException catch (e) {  
-                    if (e.code == 'weak-password') {
-                      //call the error dialog function
-                      await showErrorDialog(
+                  } //then we call the exceptions we've created
+                  on WeakPasswordAuthException{
+                    await showErrorDialog(
                         //context is gotten from the builContent of the view
                         context, 
                         'Minimum of 6 characters',
                       );
-                    } else if (e.code == 'email-already-in-use') {
-                      await showErrorDialog(
-                        //context is gotten from the builContent of the view
-                        context, 
-                        'Email is already in use',
-                      );                      
-                    } else if (e.code == 'invalid-email') {
-                      await showErrorDialog(
-                        //context is gotten from the builContent of the view
-                        context, 
-                        'Invalid email entered',
-                      ); 
-                    } else {
-                      await showErrorDialog(
-                        //context is gotten from the builContent of the view
-                        context, 
-                        'Error: ${e.code}',
-                      );
-                    }
-                  }   
-                  //for other exceptions
-                  //we can attach other catch statement
-                  catch (e){
+                  }
+                  on EmailAlreadyInUse{
                     await showErrorDialog(
                         //context is gotten from the builContent of the view
                         context, 
-                        e.toString(),
+                        'Email is already in use',
+                      ); 
+                  }
+                  on InvlaidEmailAuthException{
+                    await showErrorDialog(
+                        //context is gotten from the builContent of the view
+                        context, 
+                        'Invalid email entered',
                       );
                   }
+                  on GenericAuthException{
+                    await showErrorDialog(
+                        //context is gotten from the builContent of the view
+                        context, 
+                        'Failed to register',
+                      );
+                  }               
+                  // on FirebaseAuthException catch (e) {  
+                  //   if (e.code == 'weak-password') {
+                  //     //call the error dialog function
+                  //     await showErrorDialog(
+                  //       //context is gotten from the builContent of the view
+                  //       context, 
+                  //       'Minimum of 6 characters',
+                  //     );
+                  //   } else if (e.code == 'email-already-in-use') {
+                  //     await showErrorDialog(
+                  //       //context is gotten from the builContent of the view
+                  //       context, 
+                  //       'Email is already in use',
+                  //     );                      
+                  //   } else if (e.code == 'invalid-email') {
+                  //     await showErrorDialog(
+                  //       //context is gotten from the builContent of the view
+                  //       context, 
+                  //       'Invalid email entered',
+                  //     ); 
+                  //   } else {
+                  //     await showErrorDialog(
+                  //       //context is gotten from the builContent of the view
+                  //       context, 
+                  //       'Error: ${e.code}',
+                  //     );
+                  //   }
+                  // }   
+                  // //for other exceptions
+                  // //we can attach other catch statement
+                  // catch (e){
+                  //   await showErrorDialog(
+                  //       //context is gotten from the builContent of the view
+                  //       context, 
+                  //       e.toString(),
+                  //     );
+                  // }
                               
                 }, 
                 child: const Text(
@@ -142,5 +169,3 @@ class _RegisterViewState extends State<RegisterView> {
     );
   }
 }
-
-

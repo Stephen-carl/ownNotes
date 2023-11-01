@@ -1,9 +1,8 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:ownnotes/constants/routes.dart';
-import 'dart:developer' as devtools show log;
+import 'package:ownnotes/service/auth/auth_service.dart';
 
 //creating a different class for verfying the mail
 //so this will just be a popup on top of the homepage
@@ -29,17 +28,15 @@ class _VerifyEmailViewState extends State<VerifyEmailView> {
             TextButton(
               onPressed: () async {
                 //1. get the current user
-                final theUser = FirebaseAuth.instance.currentUser;
-                //2. send email verfication, mind you the user can be null so use the '?'
-                await theUser?.sendEmailVerification();
-                if (theUser?.emailVerified??false) {
-                  Navigator.of(context).pushNamedAndRemoveUntil(
-                    loginRoute, 
-                    (_) => false,
-                  );
-                } else {
-                  devtools.log('Please verify your email');
-                }
+                await AuthService.firebase().sendEmailVerification();
+                // if (theUser?.emailVerified??false) {
+                //   Navigator.of(context).pushNamedAndRemoveUntil(
+                //     loginRoute, 
+                //     (_) => false,
+                //   );
+                // } else {
+                //   devtools.log('Please verify your email');
+                // }
               }, 
               child: const Text('Send email verification'),
               ),
@@ -47,7 +44,7 @@ class _VerifyEmailViewState extends State<VerifyEmailView> {
               TextButton(
                 onPressed: () async{
                   //log the user out
-                  await FirebaseAuth.instance.signOut();
+                  await AuthService.firebase().logout();
                   Navigator.of(context).pushNamedAndRemoveUntil(
                     registerRoute, 
                     (route) => false,

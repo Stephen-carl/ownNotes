@@ -1,8 +1,12 @@
+import 'package:firebase_core/firebase_core.dart';
+import 'package:ownnotes/firebase_options.dart';
+
 import 'auth_user.dart';
 import 'auth_provider.dart';
 import 'auth_exceptions.dart';
 import 'package:firebase_auth/firebase_auth.dart' show FirebaseAuth, FirebaseAuthException;
 
+//if firebase is our auth provider
 class FirebaseAuthProvider implements AuthProvider {
   @override
   Future<AuthUser> createUser({
@@ -112,6 +116,14 @@ class FirebaseAuthProvider implements AuthProvider {
       //throw the exception
       throw UserNotLoggedIn();
     }
+  }
+  
+  @override
+  Future<void> iniitialize() async {
+    await Firebase.initializeApp(
+        //to get the current platorm the app is installed in and use the app id to talk to t he firebase
+        options: DefaultFirebaseOptions.currentPlatform
+    );
   }
   
 }

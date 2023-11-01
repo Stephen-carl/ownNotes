@@ -1,10 +1,9 @@
 // ignore_for_file: use_build_context_synchronously
-
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-//import 'dart:developer' as devtools show log;
 
 import 'package:ownnotes/constants/routes.dart';
+import 'package:ownnotes/service/auth/auth_exceptions.dart';
+import 'package:ownnotes/service/auth/auth_service.dart';
 import 'package:ownnotes/utilities/show_error_dialog.dart'; 
 
 //Login View
@@ -74,13 +73,13 @@ class _LoginViewState extends State<LoginView> {
                     //instantiate the firebase auth to get the function to create a user
                   //create instants of firebaseAuth
                   //using await makes the process start
-                  await FirebaseAuth.instance.signInWithEmailAndPassword(
+                  await AuthService.firebase().login(
                     email: email, 
                     password: password
                     );
-                    final useer = FirebaseAuth.instance.currentUser;
+                    final useer = AuthService.firebase().currentUser;
                     //if user email verification is false
-                    if (useer?.emailVerified??false) {
+                    if (useer?.isEmailVerified??false) {
                       //users email is verified, push to NotesView
                       //once confirmed, take the user to the notesView
                       Navigator.of(context).pushNamedAndRemoveUntil(
@@ -93,42 +92,61 @@ class _LoginViewState extends State<LoginView> {
                       verifyRoute, 
                       (route) => false,
                     );
-                    }
-                                      
-                  } 
-                  //to read the exact error and work on it
+                    }                
+                  } //to read the exact error and work on it
                   //it has a email and password exception
-                  on FirebaseAuthException catch (e) {
-                    if (e.code == 'invalid-login-credentials') {
-                      //call the error dialog function
-                      await showErrorDialog(
+                  on InvalidLoginCredentials {
+                    await showErrorDialog(
                         //context is gotten from the builContent of the view
                         context, 
                         'invalid-login-credentials',
                       );
-                    } else if(e.code == 'invalid-email'){
-                      await showErrorDialog(
+                  } 
+                  on InvalidEmail{
+                    await showErrorDialog(
                         //context is gotten from the builContent of the view
                         context, 
                         'invalid-email',
                       );
-                    } else {
-                      //so incase there are other errors i did not notice
-                      await showErrorDialog(
-                        //context is gotten from the builContent of the view
-                        context, 
-                        'Error: ${e.code}',
-                      );
-                    }
                   }
-                  //to handle other excpetion
-                  catch(e) {
+                  on GenericAuthException{
                     await showErrorDialog(
                         //context is gotten from the builContent of the view
                         context, 
-                        e.toString(),
+                        'Authentication Error',
                       );
-                  }              
+                  }
+                  // on FirebaseAuthException catch (e) {
+                  //   if (e.code == 'invalid-login-credentials') {
+                  //     //call the error dialog function
+                  //     await showErrorDialog(
+                  //       //context is gotten from the builContent of the view
+                  //       context, 
+                  //       'invalid-login-credentials',
+                  //     );
+                  //   } else if(e.code == 'invalid-email'){
+                  //     await showErrorDialog(
+                  //       //context is gotten from the builContent of the view
+                  //       context, 
+                  //       'invalid-email',
+                  //     );
+                  //   } else {
+                  //     //so incase there are other errors i did not notice
+                  //     await showErrorDialog(
+                  //       //context is gotten from the builContent of the view
+                  //       context, 
+                  //       'Error: ${e.code}',
+                  //     );
+                  //   }
+                  // }
+                  // //to handle other excpetion
+                  // catch(e) {
+                  //   await showErrorDialog(
+                  //       //context is gotten from the builContent of the view
+                  //       context, 
+                  //       e.toString(),
+                  //     );
+                  // }              
                 }, 
                 child: const Text(
                   'Login',
