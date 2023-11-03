@@ -135,7 +135,7 @@ class MockAuthProvider implements AuthProvider {
       if (email == 'foo@bar.com') throw UserNotfoundAuthException();
       if (password == 'foobar') throw InvalidLoginCredentials();
       //create a fake user
-      const userr = AuthUser(isEmailVerified: false);
+      const userr = AuthUser(isEmailVerified: false, email: 'foo@Bar.com');
       _user = userr;
       //return future of AuthUser
       return Future.value(userr); 
@@ -159,7 +159,7 @@ class MockAuthProvider implements AuthProvider {
     final userrr = _user;
     if (userrr == null) throw UserNotfoundAuthException();
     //then we get the new user
-    const newUser = AuthUser(isEmailVerified: true);
+    const newUser = AuthUser(isEmailVerified: true, email: 'foo@Bar.com');
     _user = newUser;
   }
   

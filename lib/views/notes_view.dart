@@ -6,6 +6,7 @@ import 'package:ownnotes/constants/routes.dart';
 import 'package:ownnotes/enums/menu_actions.dart';
 import 'package:ownnotes/main.dart';
 import 'package:ownnotes/service/auth/auth_service.dart';
+import 'package:ownnotes/service/crud/notes_service.dart';
 
 class Notesview extends StatefulWidget {
   const Notesview({super.key});
@@ -15,12 +16,35 @@ class Notesview extends StatefulWidget {
 }
 
 class _NoteviewState extends State<Notesview> {
+  //get the noteservice
+  late final NotesService _notesService;
+  //expose the user email from firebase 
+  String get userEmail => AuthService.firebase().currentUser!.email!;
+
+  //open the Database
+  @override
+  void initState(){
+    //initialize note service//s
+    _notesService = NotesService();
+    super.initState();
+  }
+  //close DB
+  @override
+  void dispose() {
+    _notesService.close();
+    super.dispose();
+  }
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Notes'),
         actions: [
+          IconButton(
+            onPressed: () {}, 
+            icon: const Icon(Icons.add),
+          ),
           //here we declare the enum in the popupMenuButton
           PopupMenuButton<MenuAction>(
             onSelected: (value) async{
@@ -50,10 +74,33 @@ class _NoteviewState extends State<Notesview> {
           })
         ],
       ),
-      body: const Column(
-        children: [
-
-        ],
+      body: FutureBuilder(
+        future: _notesService.getorcreateUser(email: userEmail), 
+        builder: (context, snapshot) {
+          //grab all notes from stream controller to be displayed
+          switch (snapshot.connectionState) {
+            
+            case ConnectionState.done:
+            //upon the connection successful, we will build widget with the data
+              return StreamBuilder(
+                //call the function that grabs all the notes
+                stream: _notesService.allNotes, 
+                builder: (context, snapshot){
+                  switch (snapshot.connectionState) {
+                    
+                    case ConnectionState.waiting:
+                    
+                    case ConnectionState.done:
+                     
+                    default:
+                    return const CircularProgressIndicator();
+                  }
+                });
+            default:
+            //just return an indicator while doing the process
+            return const CircularProgressIndicator();
+          }
+        },
       )
     );
   }
