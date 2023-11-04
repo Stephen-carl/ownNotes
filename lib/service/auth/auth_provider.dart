@@ -4,7 +4,7 @@ import 'auth_user.dart';
 abstract class AuthProvider {
   //we are meant to initilize the app here
   Future<void> iniitialize();
-  //so any auth_provider should habe the option to do these
+  //so any auth_provider should have the option to do these
   AuthUser? get currentUser;
   //login a user which should hve email and password or any other way of verification
 Future<AuthUser> login({

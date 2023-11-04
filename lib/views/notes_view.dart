@@ -42,7 +42,9 @@ class _NoteviewState extends State<Notesview> {
         title: const Text('Notes'),
         actions: [
           IconButton(
-            onPressed: () {}, 
+            onPressed: () {
+              Navigator.of(context).pushNamed(newNoteRoute);
+            }, 
             icon: const Icon(Icons.add),
           ),
           //here we declare the enum in the popupMenuButton
@@ -87,10 +89,11 @@ class _NoteviewState extends State<Notesview> {
                 stream: _notesService.allNotes, 
                 builder: (context, snapshot){
                   switch (snapshot.connectionState) {
-                    
+                    //waiting for a data that has not been inputed
                     case ConnectionState.waiting:
                     
-                    case ConnectionState.done:
+                    //so once there is a data tobe returned, then the connection state will will change
+                    case ConnectionState.active:
                      
                     default:
                     return const CircularProgressIndicator();
